@@ -1,0 +1,90 @@
+class Solution {
+    public int minimumSum(int[][] grid) {
+        return Area(grid);
+    }
+
+    public static int Area(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        int ans = Integer.MAX_VALUE;
+
+        // Case 1: 3 horizontal rectangles
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j + 1 < n; j++) {
+                ans = Math.min(ans, minimumArea(grid, 0, 0, i, m - 1) +
+                                    minimumArea(grid, i + 1, 0, j, m - 1) +
+                                    minimumArea(grid, j + 1, 0, n - 1, m - 1));
+            }
+        }
+
+        // Case 2: 3 vertical rectangles
+        for (int i = 0; i < m; i++) {
+            for (int j = i + 1; j + 1 < m; j++) {
+                ans = Math.min(ans, minimumArea(grid, 0, 0, n - 1, i) +
+                                    minimumArea(grid, 0, i + 1, n - 1, j) +
+                                    minimumArea(grid, 0, j + 1, n - 1, m - 1));
+            }
+        }
+
+        // Case 3: 1 horizontal cut, then bottom part split vertically
+        for (int i = 0; i + 1 < n; i++) {
+            for (int j = 0; j + 1 < m; j++) {
+                ans = Math.min(ans, minimumArea(grid, 0, 0, i, m - 1) +
+                                    minimumArea(grid, i + 1, 0, n - 1, j) +
+                                    minimumArea(grid, i + 1, j + 1, n - 1, m - 1));
+            }
+        }
+
+        // Case 4: 1 horizontal cut, then top part split vertically
+        for (int i = 0; i + 1 < n; i++) {
+            for (int j = 0; j + 1 < m; j++) {
+                ans = Math.min(ans, minimumArea(grid, 0, 0, i, j) +
+                                    minimumArea(grid, 0, j + 1, i, m - 1) +
+                                    minimumArea(grid, i + 1, 0, n - 1, m - 1));
+            }
+        }
+
+        // Case 5: 1 vertical cut, then right part split horizontally
+        for (int j = 0; j + 1 < m; j++) {
+            for (int i = 0; i + 1 < n; i++) {
+                ans = Math.min(ans, minimumArea(grid, 0, 0, n - 1, j) +
+                                    minimumArea(grid, 0, j + 1, i, m - 1) +
+                                    minimumArea(grid, i + 1, j + 1, n - 1, m - 1));
+            }
+        }
+
+        // Case 6: 1 vertical cut, then left part split horizontally
+        for (int j = 0; j + 1 < m; j++) {
+            for (int i = 0; i + 1 < n; i++) {
+                ans = Math.min(ans, minimumArea(grid, 0, 0, i, j) +
+                                    minimumArea(grid, i + 1, 0, n - 1, j) +
+                                    minimumArea(grid, 0, j + 1, n - 1, m - 1));
+            }
+        }
+
+        return ans;
+    }
+
+    public static int minimumArea(int[][] grid, int cr, int cc, int er, int ec) {
+        int minr = Integer.MAX_VALUE;
+        int minc = Integer.MAX_VALUE;
+        int maxr = Integer.MIN_VALUE;
+        int maxc = Integer.MIN_VALUE;
+        boolean found = false;
+
+        for (int i = cr; i <= er; i++) {
+            for (int j = cc; j <= ec; j++) {
+                if (grid[i][j] == 1) {
+                    found = true;
+                    minr = Math.min(minr, i);
+                    minc = Math.min(minc, j);
+                    maxr = Math.max(maxr, i);
+                    maxc = Math.max(maxc, j);
+                }
+            }
+        }
+
+        if (!found) return 0;
+        return (maxr - minr + 1) * (maxc - minc + 1);
+    }
+}
