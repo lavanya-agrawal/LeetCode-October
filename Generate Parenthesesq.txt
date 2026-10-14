@@ -1,0 +1,18 @@
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        Parentheses(n,0,0,"",result);
+        return result;
+    }
+    public static void Parentheses(int n,int open,int closed,String ans,List<String> result){
+        if(open==n && closed==n){
+            result.add(ans);
+            return;
+        }
+        if(open>n || closed>open){
+            return;
+        }
+        Parentheses(n,open+1,closed,ans+"(",result);
+        Parentheses(n,open,closed+1,ans+")",result);
+    }
+}
